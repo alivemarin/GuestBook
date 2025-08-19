@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guestbook</title>
+    <style>
+        /* 간단한 스타일링을 추가하여 보기 좋게 만듭니다. */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 700px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .form-container, .posts-container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .post-card {
+            border: 1px solid #e1e1e1;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .post-card strong {
+            color: #2980b9;
+        }
+        .post-card .timestamp {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-top: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guestbook 📝</h1>
+
+        <div class="form-container">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    {{ form.author.label }}<br>
+                    {{ form.author(class="form-control", placeholder="이름을 입력하세요") }}
+                </div>
+                <div class="form-group">
+                    {{ form.content.label }}<br>
+                    {{ form.content(class="form-control", rows="4", placeholder="내용을 입력하세요") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn") }}
+                </div>
+            </form>
+        </div>
+
+        <div class="posts-container">
+            <h2>남겨진 글</h2>
+            {% for post in posts %}
+                <div class="post-card">
+                    <p><strong>{{ post.author }}</strong></p>
+                    <p>{{ post.content }}</p>
+                    <span class="timestamp">{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+            {% else %}
+                <p>아직 작성된 글이 없습니다.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
