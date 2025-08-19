@@ -2,6 +2,8 @@ FROM python:3.10-slim
 #3.11추천해줬는데 우리는 3.10 사용
 WORKDIR /app    
 #작업디렉토리 형성
+RUN python -m pip install --upgrade pip setuptools==78.1.1 wheel
+#pip와 setuptools, wheel 업그레이드
 COPY requirements.txt .     
 #requirements.txt 파일 복사
 RUN pip install --no-cache-dir -r requirements.txt
