@@ -22,7 +22,7 @@ jobs:
 
       - name: Run test suite
         run: |
-          docker compose exec web pytest
+          docker compose run --rm web pytest
 
       - name: Tear down
         if: always()
