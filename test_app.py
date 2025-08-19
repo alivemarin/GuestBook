@@ -29,7 +29,7 @@ def test_index_page_loads(client):
     resp = client.get('/')
     assert resp.status_code == 200
     assert b'Guestbook' in resp.data # 페이지 제목에 'Guestbook'이 있는지 확인 (템플릿에 따라 수정)
-    assert b'이름' in resp.data       # 폼에 '이름' 필드가 있는지 확인
+    assert b'name' in resp.data       # 폼에 '이름' 필드가 있는지 확인
 
 
 def test_post_submission(client):
@@ -38,7 +38,7 @@ def test_post_submission(client):
     """
     # 'follow_redirects=True'는 POST 후 리다이렉트 되는 페이지까지 따라가라는 의미입니다.
     resp = client.post('/', data={
-        'author': '테스터',
+        'author': 'tester',
         'content': '이것은 테스트 게시물입니다.'
     }, follow_redirects=True)
 
@@ -46,8 +46,8 @@ def test_post_submission(client):
     assert resp.status_code == 200
 
     # 게시물이 페이지에 잘 나타나는지 확인
-    assert b'테스터' in resp.data
-    assert b'이것은 테스트 게시물입니다.' in resp.data
+    assert b'tester' in resp.data
+    assert b'this is the tester page' in resp.data
 
 
 def test_database_entry(client):
