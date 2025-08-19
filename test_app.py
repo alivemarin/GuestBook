@@ -45,9 +45,11 @@ def test_post_submission(client):
     # 요청이 성공적으로 처리되었는지 확인
     assert resp.status_code == 200
 
+    # 먼저 utf-8로 인코딩
+    html = resp.data.decode('utf-8')
     # 게시물이 페이지에 잘 나타나는지 확인
-    assert b'tester' in resp.data
-    assert b'this is the tester page' in resp.data
+    assert b'tester' in html
+    assert b'이것은 테스트 게시물입니다.' in html
 
 
 def test_database_entry(client):
