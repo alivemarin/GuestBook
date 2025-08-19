@@ -109,14 +109,18 @@ jobs:
           "
 
       # ── 4. HTTP 응답 대기 ───────────────────────────────────────────────
-      - name: Wait for HTTP
+      - name: Wait for HTTP (fail if not ready)
         run: |
-          for i in {1..24}; do
-            if curl -sSf -m 5 http://${{ env.DOMAIN }} >/dev/null 2>&1; then
-              echo "HTTP OK"; break
+          set -euo pipefail
+          for i in ${seq 1 24}; do
+            if curl -fsS -m 5 -o /dev/null "http://${{ env.DOMAIN }}"; then
+              echo "HTTP OK";
+              exit 0 
             fi
             echo "...waiting HTTP (${i}/24)"; sleep 5
           done
+          echo "ERROR : HTTP did not become read in time" > &2
+          exit 1
 
       # ── 5. 인증서 첫발급/갱신 ──────────────────────────────────────────────
       - name: Issue / Renew SSL
@@ -202,16 +206,19 @@ jobs:
             docker compose -f docker-compose.prod.yml pull &&
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
           "
-
-      # ── 10. HTTPS 검증 ──────────────────────────────────────────────────
-      - name: Verify HTTPS
+      # — 10. HTTPS 검증 ————————————————
+      - name: Verify HTTPS (fail if not ready)
         run: |
-          for i in {1..12}; do
-            if curl -sSf -m 5 https://${{ env.DOMAIN }} >/dev/null 2>&1; then
-              echo "HTTPS OK"; break
+          set -euo pipefail
+          for i in $(seq 1 12); do
+            if curl -fsS -m 5 -o /dev/null "https://${{ env.DOMAIN }}"; then
+              echo "HTTPS OK"
+              exit 0
             fi
-            echo "...waiting HTTPS (${i}/12)"; sleep 10
+            echo "...waiting HTTPS ($i/12)"; sleep 10
           done
+          echo "ERROR: HTTPS did not become ready in time" >&2
+          exit 1
 
       # ── 11. 오래된 이미지 정리 ──────────────────────────────────────────
       - name: Prune images
