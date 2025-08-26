@@ -5,7 +5,8 @@
 FROM python:3.11-slim-bookworm as builder
 # 작업 디렉토리를 설정합니다.
 WORKDIR /app
-
+# 취약이 있는 setuptools 버전을 최신으로 업그레이드합니다.
+RUN pip install --upgrade pip wheel setuptools
 # 의존성 파일을 먼저 복사하여 Docker 레이어 캐싱을 활용합니다.
 COPY requirements.txt .
 # --prefix /install : 시스템 전체가 아닌 특정 폴더에 라이브러리를 설치합니다.
