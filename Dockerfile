@@ -11,7 +11,11 @@ RUN apk add --no-cache build-base
 COPY requirements.txt .
 # --prefix /install : 시스템 전체가 아닌 특정 폴더에 라이브러리를 설치합니다.
 
-RUN pip install --prefix /install -r requirements.txt
+# setuptools 구버전 흔적 완전 삭제 후 재설치
+RUN pip uninstall -y setuptools || true && \
+    rm -rf /usr/local/lib/python3.11/site-packages/setuptools* && \
+    pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --prefix=/install -r requirements.txt
 
 # 소스 코드를 복사합니다.
 COPY . .
