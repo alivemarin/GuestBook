@@ -19,7 +19,8 @@ COPY . .
 # --- 2단계: 최종 실행 환경 ---
 # 더 작고 보안성이 강화된 이미지 사용 (alpine)
 FROM python:3.11-alpine
-
+# Trivy 대응으로 pip, setuptools, wheel 최신화 (먼저 root로 설치)
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 # 보안 강화를 위해 root가 아닌 일반 사용자를 생성하고 사용합니다.
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /home/appuser
@@ -28,7 +29,6 @@ USER appuser
 # 빌드 환경에서 설치한 라이브러리와 소스 코드만 복사합니다.
 COPY --from=builder /install /usr/local
 COPY --from=builder /app .
-# Trivy 대응으로 pip, setuptools, wheel 최신화
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
 # 애플리케이션 실행
 CMD ["python", "app.py"]
