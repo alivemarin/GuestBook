@@ -44,8 +44,9 @@ jobs:
           push: true
           tags:   ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to:   type=gha,mode=max
+          #cache-from: type=gha
+          #cache-to:   type=gha,mode=max 캐시부분 오류로 인한 수정
+          no-cache: true
 
   security-gate:
     needs: build-and-push
@@ -68,7 +69,6 @@ jobs:
           severity: 'HIGH,CRITICAL'
           ignore-unfixed: true
           format: table
-          output: trivy-image.sarif
           exit-code: '0'
           scanners: 'vuln'
 # 로그 테스트를 위한 주석 처리
