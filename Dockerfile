@@ -18,9 +18,7 @@ COPY . .
 
 # --- 2단계: 최종 실행 환경 ---
 # 더 작고 보안성이 강화된 이미지 사용 (Distroless로 대체)
-FROM gcr.io/distroless/python3:3.11-nonroot
-
-
+FROM gcr.io/distroless/python3-debian12
 
 # 빌드 환경에서 설치한 라이브러리와 소스 코드만 복사합니다.
 COPY --from=builder /app/packages /app/packages
