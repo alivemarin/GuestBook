@@ -22,7 +22,7 @@ COPY . .
 FROM python:3.11-alpine
 
 # 보안 강화를 위해 root가 아닌 일반 사용자를 생성하고 사용합니다.
-RUN add
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /home/appuser
 USER appuser
 
