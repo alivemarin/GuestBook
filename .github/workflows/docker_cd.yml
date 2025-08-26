@@ -61,27 +61,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-
-      - name: Trivy image scan (Logging only, no fail)
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: ${{ env.IMG }}
-          severity: 'HIGH,CRITICAL'
-          ignore-unfixed: true
-          format: table
-          exit-code: '0'
-          scanners: 'vuln'
-# 로그 테스트를 위한 주석 처리
-      #- name: Trivy image scan (HIGH/CRIT fail)
+#로그 테스트
+      #- name: Trivy image scan (Logging only, no fail)
         #uses: aquasecurity/trivy-action@0.28.0
         #with:
           #image-ref: ${{ env.IMG }}
           #severity: 'HIGH,CRITICAL'
           #ignore-unfixed: true
-          #format: sarif
-          #output: trivy-image.sarif
-          #exit-code: '1'
+          #format: table
+          #exit-code: '0'
           #scanners: 'vuln'
+
+      - name: Trivy image scan (HIGH/CRIT fail)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMG }}
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          format: sarif
+          output: trivy-image.sarif
+          exit-code: '1'
+          scanners: 'vuln'
 
       - name: Upload Trivy SARIF
         if: always()
