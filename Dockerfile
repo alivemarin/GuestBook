@@ -7,8 +7,8 @@ FROM python:3.11-alpine as builder
 WORKDIR /app
 # 빌드에 필요한 패키지를 설치합니다.
 RUN apk add --no-cache build-base
-# 취약이 있는 setuptools 버전을 최신으로 업그레이드합니다.
-RUN pip install --upgrade pip wheel setuptools
+# 취약이 있는 setuptools 버전을 최신으로 업그레이드합니다. (requirements.txt에 명시적으로 추가해 주석처리)
+# RUN pip install --upgrade pip wheel setuptools
 # 의존성 파일을 먼저 복사하여 Docker 레이어 캐싱을 활용합니다.
 COPY requirements.txt .
 # --prefix /install : 시스템 전체가 아닌 특정 폴더에 라이브러리를 설치합니다.
