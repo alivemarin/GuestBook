@@ -17,7 +17,7 @@ jobs:
 
       - name: Build & start services in background
         run: |
-          docker compose up -d --build
+          docker compose up -d --build --no-cache
           sleep 10
 
       - name: Run test suite
