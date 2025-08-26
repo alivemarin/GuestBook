@@ -1,10 +1,12 @@
 # Dockerfile
 
 # --- 1단계: 빌드 환경 ---
-# 빌드에 필요한 모든 도구를 포함하는 공식 이미지를 사용합니다.
-FROM python:3.11-slim-bookworm as builder
+# 빌드에 필요한 모든 도구를 포함하는 공식 이미지를 사용합니다. (slim 대신 alpine 사용)
+FROM python:3.11-alpine as builder
 # 작업 디렉토리를 설정합니다.
 WORKDIR /app
+# 빌드에 필요한 패키지를 설치합니다.
+RUN apk add --no-cache build-base
 # 취약이 있는 setuptools 버전을 최신으로 업그레이드합니다.
 RUN pip install --upgrade pip wheel setuptools
 # 의존성 파일을 먼저 복사하여 Docker 레이어 캐싱을 활용합니다.
@@ -16,11 +18,11 @@ RUN pip install --prefix=/install -r requirements.txt
 COPY . .
 
 # --- 2단계: 최종 실행 환경 ---
-# 훨씬 가볍고 보안 패치가 적용된 최신 slim 이미지를 사용합니다.
-FROM python:3.11-slim-bookworm
+# 더 작고 보안성이 강화된 이미지 사용 (alpine)
+FROM python:3.11-alpine
 
 # 보안 강화를 위해 root가 아닌 일반 사용자를 생성하고 사용합니다.
-RUN useradd --create-home appuser
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /home/appuser
 USER appuser
 
