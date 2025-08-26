@@ -1,7 +1,7 @@
 name: Security – DAST (ZAP after CD)
 
 on:
-  # CD 워크플로우가 "성공"하면 후속 실행
+  # CD 워크플로우가 "성공"하면(일치) 후속 실행  
   workflow_run:
     workflows: ["CD – Build, Push & Deploy to GCE"]
     types: [completed]
